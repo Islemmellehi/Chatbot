@@ -3,15 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="./bot.png" type="image/x-icon">
     <title>Echi5 Gibouti</title>
     <style>
       @font-face {
         font-family: font1;
-        src: url(/YsabeauOffice-Regular.ttf);
+        src: url(./YsabeauOffice-Regular.ttf);
       }
       @font-face {
         font-family: font2;
-        src: url(/Lora-Regular.ttf);
+        src: url(./Lora-Regular.ttf);
       }
       .container {
         text-align: center;
@@ -170,6 +171,7 @@
     </div>
 
     <script>
+      //this function serves to automatically scroll down in the chat
       function scrollToBottom() {
         var conversationDiv = document.getElementById("conversation");
         conversationDiv.scrollTop = conversationDiv.scrollHeight;
@@ -183,12 +185,12 @@
           userInput +
           "</p>" +
           "</div>" +
-          '<img src="/man.png" class="user-image">' + // Added bot image
+          '<img src="./man.png" class="user-image">' + 
           "</div>";
           scrollToBottom();
 
 
-        // Fetch request to Python backend
+        // Fetching data from the python backend 
         fetch("http://localhost:5000/chatbot", {
           method: "POST",
           headers: {
@@ -201,7 +203,7 @@
             var botResponse = data.response;
             document.getElementById("conversation").innerHTML +=
               '<div class="response-bot">' +
-              '<img src="/bot.png" class="bot-image">' + // Added bot image
+              '<img src="./bot.png" class="bot-image">' +
               '<div class="bubble bot-bubble">' +
               '<p class="message speech-left">' +
               botResponse +
@@ -209,7 +211,6 @@
               "</div>" +
               "</div>";
 
-            // Scroll to the bottom of the conversation div
             scrollToBottom();
           })
           .catch((error) => console.error("Error:", error));
@@ -217,16 +218,14 @@
         document.getElementById("user-input").value = "";
       }
 
-      // Rest of the code remains the same...
 
-      // Listen for keydown event on the input field
+      //this function is used to make pressing the enter key in the keyboard execute the function without having to press the button
       document
         .getElementById("user-input")
         .addEventListener("keydown", function (event) {
-          // Check if the pressed key is Enter (keyCode 13)
           if (event.keyCode === 13) {
-            event.preventDefault(); // Prevent the default Enter key behavior (e.g., line break in the input field)
-            sendMessage(); // Call the sendMessage function
+            event.preventDefault(); 
+            sendMessage(); 
           }
         });
     </script>
