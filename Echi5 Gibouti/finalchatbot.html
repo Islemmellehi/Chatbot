@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Echi5 Gibouti</title>
+    <style>
+      @font-face {
+        font-family: font1;
+        src: url(/YsabeauOffice-Regular.ttf);
+      }
+      @font-face {
+        font-family: font2;
+        src: url(/Lora-Regular.ttf);
+      }
+      .container {
+        text-align: center;
+      }
+      body {
+        overflow: hidden;
+        background: rgb(0, 178, 189);
+        background: linear-gradient(
+          90deg,
+          rgba(0, 178, 189, 1) 41%,
+          rgba(48, 220, 206, 1) 100%
+        );
+      }
+
+      #conversation {
+        height: 380px;
+        width: 850px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        border-top: 7px solid #8383835e;
+        border-left: 7px solid #8383835e;
+        border-right: 1px solid #8383835e;
+        border-bottom: 1px solid #8383835e;
+        background-color: white;
+        border-radius: 50px;
+        padding: 10px;
+        margin-bottom: 10px;
+        margin-top: -0.5%;
+        margin-left: 16%;
+        overflow-y: scroll;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* Internet Explorer and Edge */
+      }
+
+      #conversation::-webkit-scrollbar {
+        display: none;
+      }
+
+      .footer2 {
+        height: 120px;
+        position: relative;
+        top: -99px;
+        left: -17px;
+        width: 103%;
+        border-radius: 60px;
+        background-color: #006d67;
+        z-index: 100;
+      }
+      .footer {
+        position: relative;
+        top: 5px;
+        left: 1px;
+        height: 120px;
+        margin-top: 2%;
+        width: 102.5%;
+        margin-left: -1.1%;
+        border-radius: 60px;
+        background-color: #045d5961;
+      }
+      #user-input {
+        position: relative;
+        top: 19px;
+        height: 40px;
+        left: -20px;
+        font-size: 20px;
+        padding-left: 20px;
+        font-style: italic;
+        border-radius: 50px;
+        border: 1px rgb(195, 195, 195) solid;
+        width: 1050px;
+      }
+      #send-btn {
+        position: relative;
+        top: 20px;
+        left: 10px;
+        height: 44px;
+        width: 100px;
+        border-radius: 20px;
+        font-size: 18px;
+        border: hidden;
+        background-color: #ff4155;
+        color: white;
+      }
+      .bubble {
+        display: inline-block;
+        max-width: 70%;
+        padding: 10px;
+        margin-bottom: 12px; /* Increased vertical distance */
+        border-radius: 12px;
+      }
+
+      .message {
+        margin: 0;
+      }
+
+      .bot-response-text {
+        margin: 0;
+      }
+
+      .bot-bubble {
+        background-color: #30d6ce;
+        float: right;
+        text-align: right;
+        clear: both;
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        margin-top: 15px; /* Increased vertical separation */
+        margin-left: 10px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .response-bot {
+        display: flex;
+        align-items: center;
+
+        margin-top: 10px; /* Increased vertical separation */
+      }
+      .user-bubble {
+        background-color: #ff4155;
+        float: right;
+        text-align: right;
+        clear: both;
+        margin-bottom: 20px; /* Increased vertical separation */
+        margin-top: 20px; /* Increased vertical separation */
+        margin-left: 10px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .response-user {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end; /* Align the user response to the right */
+        margin-top: 10px; /* Increased vertical separation */
+      }
+
+      .bot-image {
+        width: 5%;
+        margin-right: 10px; /* Adjust the margin as needed */
+      }
+      .user-image {
+        width: 5%;
+        float: right;
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 style="font-family: font2;letter-spacing: 2px;">Echi5 Gibouti</h1>
+      <div id="conversation"></div>
+      <div class="footer"></div>
+      <div class="footer2">
+        <input type="text" id="user-input" placeholder="Can i help ?" />
+        <button id="send-btn" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+    <script>
+      function scrollToBottom() {
+        var conversationDiv = document.getElementById("conversation");
+        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+      }
+      function sendMessage() {
+        var userInput = document.getElementById("user-input").value;
+        document.getElementById("conversation").innerHTML +=
+          '<div class="response-user">' +
+          '<div class="bubble user-bubble">' +
+          '<p class="message speech-right">' +
+          userInput +
+          "</p>" +
+          "</div>" +
+          '<img src="/man.png" class="user-image">' + // Added bot image
+          "</div>";
+          scrollToBottom();
+
+
+        // Fetch request to Python backend
+        fetch("http://localhost:5000/chatbot", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ input: userInput }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            var botResponse = data.response;
+            document.getElementById("conversation").innerHTML +=
+              '<div class="response-bot">' +
+              '<img src="/bot.png" class="bot-image">' + // Added bot image
+              '<div class="bubble bot-bubble">' +
+              '<p class="message speech-left">' +
+              botResponse +
+              "</p>" +
+              "</div>" +
+              "</div>";
+
+            // Scroll to the bottom of the conversation div
+            scrollToBottom();
+          })
+          .catch((error) => console.error("Error:", error));
+
+        document.getElementById("user-input").value = "";
+      }
+
+      // Rest of the code remains the same...
+
+      // Listen for keydown event on the input field
+      document
+        .getElementById("user-input")
+        .addEventListener("keydown", function (event) {
+          // Check if the pressed key is Enter (keyCode 13)
+          if (event.keyCode === 13) {
+            event.preventDefault(); // Prevent the default Enter key behavior (e.g., line break in the input field)
+            sendMessage(); // Call the sendMessage function
+          }
+        });
+    </script>
+  </body>
+</html>
